@@ -18,7 +18,7 @@ function MusicSearch() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setMusicList(data["files"]);
+        setMusicList(data);
       });
   }
 
@@ -41,11 +41,22 @@ function MusicSearch() {
       </div>
 
       <div className="flex flex-col gap-2">
-        {musicList.map((music) => (
-          <div key={music} className="p-2 bg-gray-200 rounded-lg">
-            {music}
+        {musicList
+          ? musicList.map((music) => (
+              <div key={music["id"]} className="p-2 bg-gray-200 rounded-lg">
+                <p>{music["name"]}</p>
+                <p>Artist: {music["tag"]["artist"]}</p>
+                <audio controls src={music["path"]} />
+              </div>
+            ))
+          : "Not found"}
+        {/* {musicList.map((music) => (
+          <div key={music["id"]} className="p-2 bg-gray-200 rounded-lg">
+            <p>{music["name"]}</p>
+            <p>Artist: {music["tag"]["artist"]}</p>
+            <audio controls src={music["path"]} />
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );
