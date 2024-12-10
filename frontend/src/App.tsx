@@ -1,11 +1,21 @@
 import { useState } from "react";
+import { Route, Routes } from "react-router";
 import "./App.css";
+import MusicPathContext from "./contexts/MusicPath";
+import HomeView from "./views/home";
+import SetPathView from "./views/setPath";
+import SettingsView from "./views/settings";
 
 function App() {
+  const [musicPath, setMusicPath] = useState<string | null>(null);
+
   return (
-    <div className="App">
-      <MusicSearch />
-    </div>
+    <MusicPathContext.Provider value={{ musicPath, setMusicPath }}>
+      <Routes>
+        <Route path="/" element={musicPath ? <HomeView /> : <SetPathView />} />
+        <Route path="settings" element={<SettingsView />} />
+      </Routes>
+    </MusicPathContext.Provider>
   );
 }
 

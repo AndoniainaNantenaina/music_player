@@ -1,3 +1,4 @@
+import base64
 import io
 import os
 import threading
@@ -37,22 +38,23 @@ def files():
         print(request.args.get("folder"))
 
         for index, file in enumerate(files):
-            res.append(
-                {
-                    "id": index,
-                    "path": file,
-                    "name": str(os.path.basename(file)).split(".")[0],
-                    "tag": get_tag(file),
-                }
-            )
+            with open(file, "rb") as f:
+                audio_bytes = f.read()
+                base64_audio = base64.b64encode(audio_bytes).decode("utf-8")
 
-        # res = {
-        #     "files": files,
-        #     "names": [str(os.path.basename(file)).split(".")[0] for file in files],
-        #     "tags": [get_tag(file) for file in files],
-        # }
+                res.append(
+                    {
+                        "id": index,
+                        "path": file,
+                        "audio_data": base64_audio,
+                        "name": str(os.path.basename(file)).split(".")[0],
+                        "tag": get_tag(file),
+                    }
+                )
+
     except Exception as e:
         res = {"error": str(e)}
+
     return {"data": res}
 
 
@@ -61,16 +63,15 @@ def start_server():
 
 
 if __name__ == "__main__":
-    start_server()
-    # server = threading.Thread(target=start_server)
-    # server.daemon = True
-    # server.start()
+    server = threading.Thread(target=start_server)
+    server.daemon = True
+    server.start()
 
-    # window = webview.create_window(
-    #     "Music Player",
-    #     "http://127.0.0.1:5000",
-    #     width=1024,
-    #     height=768,
-    # )
+    window = webview.create_window(
+        "Music Player",
+        "http://127.0.0.1:5000",
+        width=1024,
+        height=768,
+    )
 
-    # webview.start(debug=False)
+    webview.start(debug=False)
