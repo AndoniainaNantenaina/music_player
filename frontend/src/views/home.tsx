@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import MusicPathContext from "../contexts/MusicPath";
-import { base64ToUint8Array } from "../libs/base64";
+import { fetchAudio } from "../libs/audio";
 
 const HomeView = () => {
   const pathContext = useContext(MusicPathContext);
@@ -13,7 +13,6 @@ const HomeView = () => {
         .then(async (response) => {
           console.log(response["data"]);
 
-          // For each data in response["data"], fetch the audio data and add it as a value of the key "audio_url" in the same object.
           const updatedMusicList: any = await Promise.all(
             response["data"].map(async (music: any) => {
               const audioUrl = await fetchAudio(music["audio_data"]);
@@ -26,15 +25,8 @@ const HomeView = () => {
     }
   };
 
-  const fetchAudio = async (base64Data: any) => {
-    const audioBlob = new Blob([base64ToUint8Array(base64Data)], {
-      type: "audio/wav",
-    });
-    return URL.createObjectURL(audioBlob);
-  };
-
   return (
-    <div>
+    <div className="flex flex-col bg-slate-800 text-white">
       <h1>Home</h1>
 
       {pathContext.musicPath && (

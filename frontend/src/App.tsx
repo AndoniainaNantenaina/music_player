@@ -8,9 +8,12 @@ import SettingsView from "./views/settings";
 
 function App() {
   const [musicPath, setMusicPath] = useState<string | null>(null);
+  const [localMusicList, setLocalMusicList] = useState<any[]>([]);
 
   return (
-    <MusicPathContext.Provider value={{ musicPath, setMusicPath }}>
+    <MusicPathContext.Provider
+      value={{ musicPath, setMusicPath, localMusicList, setLocalMusicList }}
+    >
       <Routes>
         <Route path="/" element={musicPath ? <HomeView /> : <SetPathView />} />
         <Route path="settings" element={<SettingsView />} />

@@ -63,15 +63,16 @@ def start_server():
 
 
 if __name__ == "__main__":
-    server = threading.Thread(target=start_server)
-    server.daemon = True
-    server.start()
+    start_server()
+    # server = threading.Thread(target=start_server)
+    # server.daemon = True
+    # server.start()
 
-    window = webview.create_window(
-        "Music Player",
-        "http://127.0.0.1:5000",
-        width=1024,
-        height=768,
-    )
+    # window = webview.create_window(
+    #     "Music Player",
+    #     "http://127.0.0.1:5000",
+    #     width=1024,
+    #     height=768,
+    # )
 
-    webview.start(debug=False)
+    # webview.start(debug=False)

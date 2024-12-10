@@ -12,6 +12,3 @@ xcopy /s /y ..\frontend\build\favicon.ico ..\backend\static\
 xcopy /s /y ..\frontend\build\logo192.png ..\backend\static\
 xcopy /s /y ..\frontend\build\logo512.png ..\backend\static\
 echo Copying file done!
-
-echo Launching app...
-python app.py
