@@ -1,18 +1,30 @@
+import "animate.css";
 import { useContext, useState } from "react";
+import MusicList from "../components/MusicList";
 import MusicPathContext from "../contexts/MusicPath";
 import { fetchAudio } from "../libs/audio";
 
 const HomeView = () => {
   const pathContext = useContext(MusicPathContext);
   const [musicList, setMusicList] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [notification, setNotification] = useState<string | null>("");
+
+  const showNotification = (message: string) => {
+    setNotification(message);
+
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  };
 
   const fetchData = () => {
+    setIsFetching(true);
+
     if (pathContext.musicPath) {
       fetch("http://localhost:5000/files?folder=" + pathContext.musicPath)
         .then((res) => res.json())
         .then(async (response) => {
-          console.log(response["data"]);
-
           const updatedMusicList: any = await Promise.all(
             response["data"].map(async (music: any) => {
               const audioUrl = await fetchAudio(music["audio_data"]);
@@ -21,32 +33,36 @@ const HomeView = () => {
           );
 
           setMusicList(updatedMusicList);
+          setIsFetching(false);
+          showNotification("Data fetched successfully");
+        })
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+          setIsFetching(false);
+          showNotification("Error fetching data: " + error.message);
         });
     }
   };
 
   return (
-    <div className="flex flex-col bg-slate-800 text-white">
-      <h1>Home</h1>
+    <div className="flex flex-col bg-black text-white h-screen p-2">
+      {notification && (
+        <p
+          id="notification"
+          className="text-sm bg-blue-900 text-white p-2 -mt-2 -mx-2"
+        >
+          {notification}
+        </p>
+      )}
+
+      <h1 className="text-xl font-bold font-funnel">Home</h1>
 
       {pathContext.musicPath && (
-        <div>
-          <p>List found in {pathContext.musicPath}</p>
-          <button onClick={fetchData}>Fetch</button>
-
-          {musicList.length > 0
-            ? musicList.map((music) => (
-                <div key={music["id"]} className="p-2 bg-gray-200 rounded-lg">
-                  <p>{music["name"]}</p>
-                  <p>Artist: {music["tag"]["artist"]}</p>
-                  <audio controls>
-                    <source src={music["audio_url"]} type="audio/wav" />
-                    Your browser does not support the audio element.
-                  </audio>
-                </div>
-              ))
-            : "Nothing to show"}
-        </div>
+        <MusicList
+          isFetching={isFetching}
+          musicList={musicList}
+          onFetchData={fetchData}
+        />
       )}
     </div>
   );

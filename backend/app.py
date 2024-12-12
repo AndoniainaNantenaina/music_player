@@ -2,6 +2,7 @@ import base64
 import io
 import os
 import threading
+from argparse import ArgumentParser
 
 import webview
 from flask import Flask, render_template, request, send_file
@@ -10,6 +11,15 @@ from libs.functions import get_tag, list_music_in_folder
 
 app = Flask(__name__)
 CORS(app, origins=["*"])
+
+parser = ArgumentParser()
+parser.add_argument(
+    "--dev",
+    action="store_true",
+    help="Run the app in development mode.",
+    required=False,
+)
+args = parser.parse_args()
 
 
 @app.route("/")
@@ -63,16 +73,18 @@ def start_server():
 
 
 if __name__ == "__main__":
-    start_server()
-    # server = threading.Thread(target=start_server)
-    # server.daemon = True
-    # server.start()
+    if args.dev:
+        start_server()
+    else:
+        server = threading.Thread(target=start_server)
+        server.daemon = True
+        server.start()
 
-    # window = webview.create_window(
-    #     "Music Player",
-    #     "http://127.0.0.1:5000",
-    #     width=1024,
-    #     height=768,
-    # )
+        window = webview.create_window(
+            "Music Player",
+            "http://127.0.0.1:5000",
+            width=1024,
+            height=768,
+        )
 
-    # webview.start(debug=False)
+        webview.start(debug=False)
