@@ -1,8 +1,6 @@
 import {
   EllipsisHorizontalIcon,
   MusicalNoteIcon,
-  PauseIcon,
-  PlayIcon,
 } from "@heroicons/react/24/solid";
 import { useContext } from "react";
 import MusicPathContext from "../contexts/MusicPath";
@@ -50,22 +48,11 @@ const Audio = (props: {
   return (
     <div
       id={"audio-player-" + props.id}
-      className="font-funnel text-sm flex flex-row items-center p-2 m-1 bg-gray-900 hover:bg-gray-800 rounded-xl h-10 sm:gap-10 gap-4"
+      className="font-funnel text-sm flex flex-row items-center p-2 m-1 bg-gray-100 hover:bg-gray-200 text-slate-700 rounded-xl h-10 sm:gap-10 gap-4"
     >
       <MusicalNoteIcon className="h-6 w-6 text-gray-500" />
 
-      {musicContext.currentPlay?.id === props.id &&
-      musicContext.currentPlay.status === "playing" ? (
-        <button onClick={pauseMusic}>
-          <PauseIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
-        </button>
-      ) : (
-        <button onClick={playMusic}>
-          <PlayIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
-        </button>
-      )}
-
-      <div className="flex flex-row justify-between w-full">
+      <div className="flex flex-row justify-between w-full" onClick={playMusic}>
         <p>{props.title}</p>
         <p>{props.artist}</p>
         <EllipsisHorizontalIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
