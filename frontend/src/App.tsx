@@ -17,12 +17,21 @@ function App() {
   useEffect(() => {
     if (playingAudioData) {
       const audio = document.getElementById("audio-data") as HTMLAudioElement;
-      fetchAudio(playingAudioData).then((audioUrl) => {
-        audio.setAttribute("src", audioUrl);
-        audio.play();
-      });
+
+      if (audio.src !== "") {
+        if (currentPlay?.status === "playing") {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+      } else {
+        fetchAudio(playingAudioData).then((audioUrl) => {
+          audio.setAttribute("src", audioUrl);
+          audio.play();
+        });
+      }
     }
-  }, [playingAudioData]);
+  }, [playingAudioData, currentPlay?.status]);
 
   return (
     <MusicPathContext.Provider

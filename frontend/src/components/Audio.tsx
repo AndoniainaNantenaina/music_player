@@ -3,7 +3,7 @@ import {
   PauseIcon,
   PlayIcon,
 } from "@heroicons/react/24/solid";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import MusicPathContext from "../contexts/MusicPath";
 import CurrentPlay from "../data/music";
 import { getAudioData } from "../libs/audio";
@@ -16,10 +16,7 @@ const Audio = (props: {
 }) => {
   const musicContext = useContext(MusicPathContext);
 
-  const [fetching, setFetching] = useState<boolean>(false);
   const playMusic = async () => {
-    setFetching(true);
-
     musicContext.setCurrentPlay({
       id: props.id,
       artist: props.artist,
@@ -32,13 +29,19 @@ const Audio = (props: {
         if (audioData) {
           musicContext.setPlayingAudioData(audioData);
         }
-
-        setFetching(false);
       })
       .catch((error) => {
         console.error("Error fetching audio data: ", error);
-        setFetching(false);
       });
+  };
+
+  const pauseMusic = () => {
+    musicContext.setCurrentPlay({
+      id: musicContext.currentPlay?.id,
+      artist: musicContext.currentPlay?.artist,
+      title: musicContext.currentPlay?.title,
+      status: "paused",
+    } as CurrentPlay);
   };
 
   return (
@@ -48,13 +51,16 @@ const Audio = (props: {
     >
       <MusicalNoteIcon className="h-6 w-6 text-gray-500" />
 
-      <button onClick={playMusic}>
-        {musicContext.currentPlay?.id === props.id ? (
+      {musicContext.currentPlay?.id === props.id &&
+      musicContext.currentPlay.status === "playing" ? (
+        <button onClick={pauseMusic}>
           <PauseIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
-        ) : (
+        </button>
+      ) : (
+        <button onClick={playMusic}>
           <PlayIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
-        )}
-      </button>
+        </button>
+      )}
 
       <div className="flex flex-row justify-between w-full">
         <p>{props.title}</p>

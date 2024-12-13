@@ -1,10 +1,11 @@
+import { MusicalNoteIcon } from "@heroicons/react/24/solid";
 import "animate.css";
 import { useContext, useState } from "react";
 import MusicList from "../components/MusicList";
 import MusicPathContext from "../contexts/MusicPath";
 
 const HomeView = () => {
-  const pathContext = useContext(MusicPathContext);
+  const musicContext = useContext(MusicPathContext);
   const [musicList, setMusicList] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [notification, setNotification] = useState<string | null>("");
@@ -20,8 +21,8 @@ const HomeView = () => {
   const fetchData = () => {
     setIsFetching(true);
 
-    if (pathContext.musicPath) {
-      fetch("http://localhost:5000/files?folder=" + pathContext.musicPath)
+    if (musicContext.musicPath) {
+      fetch("http://localhost:5000/files?folder=" + musicContext.musicPath)
         .then((res) => res.json())
         .then(async (response) => {
           console.log(response);
@@ -51,12 +52,47 @@ const HomeView = () => {
 
       <h1 className="text-xl font-bold font-funnel">Home</h1>
 
-      {pathContext.musicPath && (
+      {musicContext.musicPath && (
         <MusicList
           isFetching={isFetching}
           musicList={musicList}
           onFetchData={fetchData}
         />
+      )}
+
+      {musicContext.currentPlay && (
+        <div className="flex flex-row items-center justify-between bg-gradient-to-t from-black to-slate-700 p-2 rounded-t-xl -mx-2 h-12">
+          <div className="flex flex-row items-center gap-2 p-2">
+            <MusicalNoteIcon className="h-6 w-6 text-slate-400 bg-blue-900 p-1 rounded-full hover:text-slate-200" />
+            <p className="text-sm font-funnel text-white">
+              {musicContext.currentPlay.artist} -{" "}
+              {musicContext.currentPlay.title}
+            </p>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <button
+              onClick={() => {
+                musicContext.setPlayingAudioData(null);
+                musicContext.setCurrentPlay(null);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-gray-500 hover:text-slate-200"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

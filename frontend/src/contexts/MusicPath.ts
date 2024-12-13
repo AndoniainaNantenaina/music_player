@@ -7,7 +7,7 @@ export interface MusicPathContextType {
   localMusicList: any[];
   setLocalMusicList: (localMusicList: any[]) => void;
   playingAudioData: any | null;
-  setPlayingAudioData: (audio_url: string) => void;
+  setPlayingAudioData: (audio_url: string | null) => void;
   currentPlay: CurrentPlay | null;
   setCurrentPlay: (audio_url: CurrentPlay | null) => void;
 }
