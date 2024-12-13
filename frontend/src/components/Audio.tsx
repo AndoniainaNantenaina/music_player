@@ -1,11 +1,25 @@
 import { MusicalNoteIcon, PlayIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 
 const Audio = (props: {
   id: string;
   artist: string;
   title: string;
-  audio_url: string;
+  path: string;
+  setOnPlaying: (audioUrl: string) => void;
 }) => {
+  const [fetching, setFetching] = useState<boolean>(false);
+  const fetchAudioData = async () => {
+    setFetching(true);
+
+    await fetch("http://localhost:5000/read?path=" + props.path)
+      .then((res) => res.json())
+      .then((response) => {
+        props.setOnPlaying(response["audio"]);
+        setFetching(false);
+      });
+  };
+
   return (
     <div
       id={"audio-player-" + props.id}
@@ -13,7 +27,7 @@ const Audio = (props: {
     >
       <MusicalNoteIcon className="h-6 w-6 text-gray-500" />
 
-      <button>
+      <button onClick={fetchAudioData}>
         <PlayIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
       </button>
       <div className="flex flex-row justify-between w-full">

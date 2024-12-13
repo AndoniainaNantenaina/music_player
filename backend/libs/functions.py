@@ -1,3 +1,4 @@
+import base64
 import os
 
 from libs.constants import FILE_FORMATS
@@ -29,3 +30,15 @@ def get_tag(file_path: str):
 
     except Exception as e:
         return {"error": str(e)}
+
+
+def get_audio(file_path: str):
+    try:
+        with open(file_path, "rb") as f:
+            audio_bytes = f.read()
+            base64_audio = base64.b64encode(audio_bytes).decode("utf-8")
+
+            return base64_audio
+    except Exception as e:
+        print(e)
+        return None

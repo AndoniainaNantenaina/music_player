@@ -2,7 +2,6 @@ import "animate.css";
 import { useContext, useState } from "react";
 import MusicList from "../components/MusicList";
 import MusicPathContext from "../contexts/MusicPath";
-import { fetchAudio } from "../libs/audio";
 
 const HomeView = () => {
   const pathContext = useContext(MusicPathContext);
@@ -25,14 +24,16 @@ const HomeView = () => {
       fetch("http://localhost:5000/files?folder=" + pathContext.musicPath)
         .then((res) => res.json())
         .then(async (response) => {
-          const updatedMusicList: any = await Promise.all(
-            response["data"].map(async (music: any) => {
-              const audioUrl = await fetchAudio(music["audio_data"]);
-              return { ...music, audio_url: audioUrl };
-            })
-          );
+          console.log(response);
 
-          setMusicList(updatedMusicList);
+          // const updatedMusicList: any = await Promise.all(
+          //   response["data"].map(async (music: any) => {
+          //     const audioUrl = await fetchAudio(music["audio_data"]);
+          //     return { ...music, audio_url: audioUrl };
+          //   })
+          // );
+
+          setMusicList(response["data"]);
           setIsFetching(false);
           showNotification("Data fetched successfully");
         })

@@ -1,13 +1,11 @@
-import base64
-import io
 import os
 import threading
 from argparse import ArgumentParser
 
 import webview
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request
 from flask_cors import CORS
-from libs.functions import get_tag, list_music_in_folder
+from libs.functions import get_audio, get_tag, list_music_in_folder
 
 app = Flask(__name__)
 CORS(app, origins=["*"])
@@ -29,14 +27,18 @@ def index():
 
 @app.route("/read")
 def read():
-    file_path = request.args.get("file")
+    try:
+        file_path = request.args.get("path")
 
-    with open(file_path, "rb") as bites:
-        return send_file(
-            io.BytesIO(bites.read()),
-            attachment_filename=os.path.basename(file_path),
-            mimetype="audio/mpeg",
-        )
+        audio_data = get_audio(file_path)
+
+        return {
+            "path": file_path,
+            "audio": audio_data,
+        }
+
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.get("/files")
@@ -44,26 +46,15 @@ def files():
     files = list_music_in_folder(request.args.get("folder"))
     res = []
 
-    try:
-        print(request.args.get("folder"))
-
-        for index, file in enumerate(files):
-            with open(file, "rb") as f:
-                audio_bytes = f.read()
-                base64_audio = base64.b64encode(audio_bytes).decode("utf-8")
-
-                res.append(
-                    {
-                        "id": index,
-                        "path": file,
-                        "audio_data": base64_audio,
-                        "name": str(os.path.basename(file)).split(".")[0],
-                        "tag": get_tag(file),
-                    }
-                )
-
-    except Exception as e:
-        res = {"error": str(e)}
+    for index, file in enumerate(files):
+        res.append(
+            {
+                "id": index,
+                "path": file,
+                "name": str(os.path.basename(file)).split(".")[0],
+                "tag": get_tag(file),
+            }
+        )
 
     return {"data": res}
 
