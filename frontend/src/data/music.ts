@@ -3,6 +3,7 @@ interface CurrentPlay {
   artist: string;
   title: string;
   path: string;
+  audioData: any | null;
   status: "playing" | "paused" | "stopped";
 }
 

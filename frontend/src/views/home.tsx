@@ -1,14 +1,29 @@
-import { MusicalNoteIcon } from "@heroicons/react/24/solid";
+import {
+  MusicalNoteIcon,
+  PauseIcon,
+  PlayIcon,
+} from "@heroicons/react/24/solid";
 import "animate.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MusicList from "../components/MusicList";
 import MusicPathContext from "../contexts/MusicPath";
+import { formatHMS } from "../libs/time";
 
 const HomeView = () => {
   const musicContext = useContext(MusicPathContext);
   const [musicList, setMusicList] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [notification, setNotification] = useState<string | null>("");
+  const audio = document.getElementById("audio-data") as HTMLAudioElement;
+  const [currentTime, setCurrentTime] = useState<number>(0);
+
+  useEffect(() => {
+    if (audio) {
+      audio.addEventListener("timeupdate", () => {
+        setCurrentTime(audio.currentTime);
+      });
+    }
+  }, [audio.currentTime]);
 
   const showNotification = (message: string) => {
     setNotification(message);
@@ -66,13 +81,32 @@ const HomeView = () => {
             <MusicalNoteIcon className="h-6 w-6 text-slate-400 bg-blue-900 p-1 rounded-full hover:text-slate-200" />
             <p className="text-sm font-funnel text-white">
               {musicContext.currentPlay.artist} -{" "}
-              {musicContext.currentPlay.title}
+              {musicContext.currentPlay.title} - {formatHMS(currentTime)}
             </p>
           </div>
           <div className="flex flex-row items-center gap-2">
             <button
               onClick={() => {
-                musicContext.setPlayingAudioData(null);
+                const audio = document.getElementById(
+                  "audio-data"
+                ) as HTMLAudioElement;
+                audio && audio.pause();
+              }}
+            >
+              <PauseIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
+            </button>
+            <button
+              onClick={() => {
+                const audio = document.getElementById(
+                  "audio-data"
+                ) as HTMLAudioElement;
+                audio && audio.play();
+              }}
+            >
+              <PlayIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
+            </button>
+            <button
+              onClick={() => {
                 musicContext.setCurrentPlay(null);
               }}
             >

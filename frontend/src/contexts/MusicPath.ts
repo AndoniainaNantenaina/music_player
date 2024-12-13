@@ -6,8 +6,6 @@ export interface MusicPathContextType {
   setMusicPath: (path: string) => void;
   localMusicList: any[];
   setLocalMusicList: (localMusicList: any[]) => void;
-  playingAudioData: any | null;
-  setPlayingAudioData: (audio_url: string | null) => void;
   currentPlay: CurrentPlay | null;
   setCurrentPlay: (audio_url: CurrentPlay | null) => void;
 }
@@ -17,8 +15,6 @@ const MusicPathContext = createContext<MusicPathContextType>({
   setMusicPath: () => {},
   localMusicList: [],
   setLocalMusicList: () => {},
-  playingAudioData: null,
-  setPlayingAudioData: () => {},
   currentPlay: null,
   setCurrentPlay: () => {},
 });

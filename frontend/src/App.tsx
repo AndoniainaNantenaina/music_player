@@ -11,27 +11,37 @@ import SettingsView from "./views/settings";
 function App() {
   const [musicPath, setMusicPath] = useState<string | null>(null);
   const [localMusicList, setLocalMusicList] = useState<any[]>([]);
-  const [playingAudioData, setPlayingAudioData] = useState<any | null>(null);
   const [currentPlay, setCurrentPlay] = useState<CurrentPlay | null>(null);
 
   useEffect(() => {
-    if (playingAudioData) {
-      const audio = document.getElementById("audio-data") as HTMLAudioElement;
+    const audio = document.getElementById("audio-data") as HTMLAudioElement;
 
-      if (audio.src !== "") {
-        if (currentPlay?.status === "playing") {
-          audio.play();
-        } else {
-          audio.pause();
-        }
-      } else {
-        fetchAudio(playingAudioData).then((audioUrl) => {
+    if (currentPlay?.audioData) {
+      fetchAudio(currentPlay.audioData).then((audioUrl) => {
+        if (audioUrl !== audio.src) {
           audio.setAttribute("src", audioUrl);
           audio.play();
-        });
+        }
+      });
+
+      // if (audio.src !== "") {
+      //   if (currentPlay?.status === "playing") {
+      //     audio.play();
+      //   } else {
+      //     audio.pause();
+      //   }
+      // } else {
+      //   fetchAudio(currentPlay.audioData).then((audioUrl) => {
+      //     audio.setAttribute("src", audioUrl);
+      //     audio.play();
+      //   });
+      // }
+    } else {
+      if (audio) {
+        audio.pause();
       }
     }
-  }, [playingAudioData, currentPlay?.status]);
+  }, [currentPlay?.path, currentPlay?.status]);
 
   return (
     <MusicPathContext.Provider
@@ -40,8 +50,6 @@ function App() {
         setMusicPath,
         localMusicList,
         setLocalMusicList,
-        playingAudioData,
-        setPlayingAudioData,
         currentPlay,
         setCurrentPlay,
       }}

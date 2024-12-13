@@ -1,4 +1,5 @@
 import {
+  EllipsisHorizontalIcon,
   MusicalNoteIcon,
   PauseIcon,
   PlayIcon,
@@ -17,17 +18,17 @@ const Audio = (props: {
   const musicContext = useContext(MusicPathContext);
 
   const playMusic = async () => {
-    musicContext.setCurrentPlay({
-      id: props.id,
-      artist: props.artist,
-      title: props.title,
-      status: "playing",
-    } as CurrentPlay);
-
     await getAudioData(props.path)
       .then((audioData) => {
         if (audioData) {
-          musicContext.setPlayingAudioData(audioData);
+          musicContext.setCurrentPlay({
+            id: props.id,
+            artist: props.artist,
+            title: props.title,
+            audioData: audioData,
+            path: props.path,
+            status: "playing",
+          } as CurrentPlay);
         }
       })
       .catch((error) => {
@@ -39,6 +40,8 @@ const Audio = (props: {
     musicContext.setCurrentPlay({
       id: musicContext.currentPlay?.id,
       artist: musicContext.currentPlay?.artist,
+      audioData: musicContext.currentPlay?.audioData,
+      path: musicContext.currentPlay?.path,
       title: musicContext.currentPlay?.title,
       status: "paused",
     } as CurrentPlay);
@@ -65,6 +68,7 @@ const Audio = (props: {
       <div className="flex flex-row justify-between w-full">
         <p>{props.title}</p>
         <p>{props.artist}</p>
+        <EllipsisHorizontalIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
       </div>
     </div>
   );
