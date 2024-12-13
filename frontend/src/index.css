@@ -9,3 +9,11 @@
   font-display: swap;
   src: url("./fonts/FunnelSans.ttf") format("ttf");
 }
+
+@font-face {
+  font-family: "Cookie";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/CookieRegular.ttf") format("ttf");
+}

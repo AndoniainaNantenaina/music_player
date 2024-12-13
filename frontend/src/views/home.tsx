@@ -26,13 +26,6 @@ const HomeView = () => {
         .then(async (response) => {
           console.log(response);
 
-          // const updatedMusicList: any = await Promise.all(
-          //   response["data"].map(async (music: any) => {
-          //     const audioUrl = await fetchAudio(music["audio_data"]);
-          //     return { ...music, audio_url: audioUrl };
-          //   })
-          // );
-
           setMusicList(response["data"]);
           setIsFetching(false);
           showNotification("Data fetched successfully");

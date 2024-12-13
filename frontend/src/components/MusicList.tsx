@@ -1,7 +1,6 @@
 import { ArrowPathIcon, MusicalNoteIcon } from "@heroicons/react/24/solid";
 import "animate.css";
-import { useEffect, useState } from "react";
-import { fetchAudio } from "../libs/audio";
+import { useState } from "react";
 import Audio from "./Audio";
 
 const MusicList = (props: {
@@ -12,26 +11,14 @@ const MusicList = (props: {
   const [onPlaying, setOnPlaying] = useState<string | null>(null);
   const [play, setPlay] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (onPlaying) {
-      const audio = document.getElementById("audio-data") as HTMLAudioElement;
-      fetchAudio(onPlaying).then((audioUrl) => {
-        audio.setAttribute("src", audioUrl);
-        audio.play();
-      });
-    }
-  }, [onPlaying]);
-
   return (
     <div className="flex flex-col overflow-auto h-full">
-      <audio id="audio-data" hidden></audio>
       {props.musicList.length > 0 ? (
         props.musicList.map((music) => (
           <Audio
             key={music["id"]}
             artist={music["tag"]["artist"]}
             title={music["name"]}
-            setOnPlaying={setOnPlaying}
             id={music["id"]}
             path={music["path"]}
           />

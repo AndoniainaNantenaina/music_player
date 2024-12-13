@@ -7,4 +7,14 @@ const fetchAudio = async (base64Data: any) => {
   return URL.createObjectURL(audioBlob);
 };
 
-export { fetchAudio };
+const getAudioData = async (path: string) => {
+  return await fetch("http://localhost:5000/read?path=" + path)
+    .then((res) => res.json())
+    .then((response) => response["audio"])
+    .catch((error) => {
+      console.error("Error fetching audio data: ", error);
+      return null;
+    });
+};
+
+export { fetchAudio, getAudioData };
