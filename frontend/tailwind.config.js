@@ -6,6 +6,7 @@ module.exports = {
       fontFamily: {
         funnel: ["FunnelSans", "sans-serif"],
         cookie: ["Cookie", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
     },
   },

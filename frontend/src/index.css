@@ -17,3 +17,11 @@
   font-display: swap;
   src: url("./fonts/CookieRegular.ttf") format("ttf");
 }
+
+@font-face {
+  font-family: "Poppins";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/PoppinsRegular.ttf") format("ttf");
+}

@@ -2,6 +2,7 @@ import {
   MusicalNoteIcon,
   PauseIcon,
   PlayIcon,
+  StopIcon,
 } from "@heroicons/react/24/solid";
 import "animate.css";
 import { useContext, useEffect, useState } from "react";
@@ -18,6 +19,10 @@ const HomeView = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
 
   useEffect(() => {
+    if (musicList.length === 0) {
+      fetchData();
+    }
+
     if (audio) {
       audio.addEventListener("timeupdate", () => {
         setCurrentTime(audio.currentTime);
@@ -59,13 +64,13 @@ const HomeView = () => {
       {notification && (
         <p
           id="notification"
-          className="text-sm bg-blue-900 text-white p-2 -mt-2 -mx-2"
+          className="text-sm bg-blue-900 text-white p-2 -mt-2 -mx-2 animate__animated animate__slideInDown animate__fast animate__repeat-1 animate__delay-1s"
         >
           {notification}
         </p>
       )}
 
-      <h1 className="text-xl font-bold font-funnel">Home</h1>
+      <h1 className="text-xl font-bold font-poppins">Home</h1>
 
       {musicContext.musicPath && (
         <MusicList
@@ -78,62 +83,57 @@ const HomeView = () => {
       {musicContext.currentPlay && (
         <div
           id="current-play"
-          className="flex flex-row items-center justify-between p-2 rounded-t-xl -mx-2 h-16 border-t-2 border-orange-600"
+          className={
+            "flex flex-row items-center justify-between p-2 -mx-2 h-16 border-t-2 " +
+            "border-orange-600 animate__animated animate__slideInUp animate__faster animate__repeat-1 animate__delay-0.5s"
+          }
         >
           <div className="flex flex-row items-center gap-2 p-2">
             <MusicalNoteIcon className="h-6 w-6 text-slate-400 bg-blue-900 p-1 rounded-full hover:text-slate-200" />
             <div className="flex flex-col">
-              <p className="text-sm font-funnel">
+              <p className="text-sm font-poppins">
                 {musicContext.currentPlay.title}
               </p>
               <p className="text-xs">{formatHMS(currentTime)}</p>
             </div>
           </div>
-          {audio && audio.paused ? (
+
+          <div id="buttons" className="flex flex-row gap-0">
+            {audio && audio.paused ? (
+              <button
+                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                onClick={() => {
+                  const audio = document.getElementById(
+                    "audio-data"
+                  ) as HTMLAudioElement;
+                  audio && audio.play();
+                }}
+              >
+                <PlayIcon className="h-6 w-6 text-white hover:text-slate-200" />
+              </button>
+            ) : (
+              <button
+                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                onClick={() => {
+                  const audio = document.getElementById(
+                    "audio-data"
+                  ) as HTMLAudioElement;
+                  audio && audio.pause();
+                }}
+              >
+                <PauseIcon className="h-6 w-6 text-white hover:text-slate-200" />
+              </button>
+            )}
             <button
-              className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-full"
+              className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-r-full"
+              id="stop-button"
               onClick={() => {
-                const audio = document.getElementById(
-                  "audio-data"
-                ) as HTMLAudioElement;
-                audio && audio.play();
+                musicContext.setCurrentPlay(null);
               }}
             >
-              <PlayIcon className="h-6 w-6 text-white hover:text-slate-200" />
+              <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
             </button>
-          ) : (
-            <button
-              className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-full"
-              onClick={() => {
-                const audio = document.getElementById(
-                  "audio-data"
-                ) as HTMLAudioElement;
-                audio && audio.pause();
-              }}
-            >
-              <PauseIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
-            </button>
-          )}
-          <button
-            onClick={() => {
-              musicContext.setCurrentPlay(null);
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-500 hover:text-slate-200"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+          </div>
         </div>
       )}
     </div>

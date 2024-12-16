@@ -1,10 +1,7 @@
-import {
-  EllipsisHorizontalIcon,
-  MusicalNoteIcon,
-} from "@heroicons/react/24/solid";
+import { MusicalNoteIcon } from "@heroicons/react/24/solid";
 import { useContext } from "react";
 import MusicPathContext from "../contexts/MusicPath";
-import CurrentPlay from "../data/music";
+import CurrentPlay from "../data/currentPlay";
 import { getAudioData } from "../libs/audio";
 
 const Audio = (props: {
@@ -34,28 +31,28 @@ const Audio = (props: {
       });
   };
 
-  const pauseMusic = () => {
-    musicContext.setCurrentPlay({
-      id: musicContext.currentPlay?.id,
-      artist: musicContext.currentPlay?.artist,
-      audioData: musicContext.currentPlay?.audioData,
-      path: musicContext.currentPlay?.path,
-      title: musicContext.currentPlay?.title,
-      status: "paused",
-    } as CurrentPlay);
-  };
-
   return (
     <div
       id={"audio-player-" + props.id}
-      className="font-funnel text-sm flex flex-row items-center p-2 m-1 bg-gray-100 hover:bg-gray-200 text-slate-700 rounded-xl h-10 sm:gap-10 gap-4"
+      className={
+        "font-funnel text-sm flex flex-row justify-between items-center p-2 m-1 bg-gray-100 hover:bg-gray-200 text-slate-700 rounded-xl h-10 sm:gap-10 gap-4" +
+        (musicContext.currentPlay?.id === props.id ? " bg-orange-100" : "")
+      }
     >
       <MusicalNoteIcon className="h-6 w-6 text-gray-500" />
 
-      <div className="flex flex-row justify-between w-full" onClick={playMusic}>
-        <p>{props.title}</p>
-        <p>{props.artist}</p>
-        <EllipsisHorizontalIcon className="h-6 w-6 text-gray-500 hover:text-slate-200" />
+      <div className="flex flex-col w-full" onClick={playMusic}>
+        <p
+          className={
+            "font-bold " +
+            (musicContext.currentPlay?.id === props.id ? "text-orange-500" : "")
+          }
+        >
+          {props.title}
+        </p>
+        <p className="flex flex-row text-xs gap-1 items-center text-slate-400">
+          by {props.artist}
+        </p>
       </div>
     </div>
   );

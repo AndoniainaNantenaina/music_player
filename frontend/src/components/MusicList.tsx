@@ -1,6 +1,5 @@
 import { ArrowPathIcon, MusicalNoteIcon } from "@heroicons/react/24/solid";
 import "animate.css";
-import { useState } from "react";
 import Audio from "./Audio";
 
 const MusicList = (props: {
@@ -8,9 +7,6 @@ const MusicList = (props: {
   onFetchData: () => void;
   isFetching: boolean;
 }) => {
-  const [onPlaying, setOnPlaying] = useState<string | null>(null);
-  const [play, setPlay] = useState<boolean>(false);
-
   return (
     <div className="flex flex-col overflow-auto h-full">
       {props.musicList.length > 0 ? (
@@ -28,8 +24,8 @@ const MusicList = (props: {
           <MusicalNoteIcon className="h-6 w-6 text-gray-500" />
           <p className="text-center text-gray-500">No music found</p>
           <p className="text-xs text-center text-gray-500">Please fetch data</p>
-          <button
-            className="px-2 py-1 mt-2 bg-blue-700 hover:bg-blue-600 text-white font-funnel rounded-full w-auto text-sm font-bold flex flex-row items-center gap-1"
+          <div
+            className="px-2 py-1 mt-2 bg-blue-700 hover:bg-blue-600 text-white font-poppins rounded-full w-auto text-sm font-bold flex flex-row items-center gap-1"
             onClick={props.onFetchData}
           >
             <ArrowPathIcon
@@ -41,7 +37,7 @@ const MusicList = (props: {
               }
             />
             {props.isFetching ? "FETCHING..." : "FETCH"}
-          </button>
+          </div>
         </div>
       )}
     </div>

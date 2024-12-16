@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import CurrentPlay from "../data/music";
+import CurrentPlay from "../data/currentPlay";
 
 export interface MusicPathContextType {
   musicPath: string | null;

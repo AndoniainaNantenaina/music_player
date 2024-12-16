@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import "./App.css";
 import MusicPathContext from "./contexts/MusicPath";
-import CurrentPlay from "./data/music";
+import CurrentPlay from "./data/currentPlay";
 import { fetchAudio } from "./libs/audio";
 import HomeView from "./views/home";
 import SetPathView from "./views/setPath";
@@ -14,6 +14,12 @@ function App() {
   const [currentPlay, setCurrentPlay] = useState<CurrentPlay | null>(null);
 
   useEffect(() => {
+    const path = sessionStorage.getItem("musicPath");
+
+    if (path) {
+      setMusicPath(path);
+    }
+
     const audio = document.getElementById("audio-data") as HTMLAudioElement;
 
     if (currentPlay?.audioData) {
@@ -23,19 +29,6 @@ function App() {
           audio.play();
         }
       });
-
-      // if (audio.src !== "") {
-      //   if (currentPlay?.status === "playing") {
-      //     audio.play();
-      //   } else {
-      //     audio.pause();
-      //   }
-      // } else {
-      //   fetchAudio(currentPlay.audioData).then((audioUrl) => {
-      //     audio.setAttribute("src", audioUrl);
-      //     audio.play();
-      //   });
-      // }
     } else {
       if (audio) {
         audio.pause();
