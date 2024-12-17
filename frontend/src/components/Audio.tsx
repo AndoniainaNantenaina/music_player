@@ -35,7 +35,7 @@ const Audio = (props: {
     <div
       id={"audio-player-" + props.id}
       className={
-        "font-funnel text-sm flex flex-row p-2 border-b-slate-500 justify-between items-center bg-gray-100 hover:bg-gray-200 text-slate-700 h-10 sm:gap-10 gap-4" +
+        "font-funnel text-sm flex flex-row p-2 justify-between items-center hover:bg-gray-100 text-gray-500 h-10 sm:gap-10 gap-4" +
         (musicContext.currentPlay?.id === props.id ? " bg-orange-100" : "")
       }
     >

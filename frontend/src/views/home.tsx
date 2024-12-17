@@ -2,6 +2,8 @@ import {
   MusicalNoteIcon,
   PauseIcon,
   PlayIcon,
+  SpeakerWaveIcon,
+  SpeakerXMarkIcon,
   StopIcon,
 } from "@heroicons/react/24/solid";
 import "animate.css";
@@ -155,6 +157,40 @@ const HomeView = () => {
             >
               <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
             </button>
+          </div>
+          <div className="flex flex-row gap-2 items-center justify-center p-2 bg-gray-300 rounded-full">
+            {audio &&
+              (audio.volume === 0 ? (
+                <SpeakerXMarkIcon
+                  onClick={() => {
+                    audio && (audio.volume = 1);
+                  }}
+                  className="h-6 w-6 text-slate-500 hover:cursor-pointer"
+                />
+              ) : (
+                <SpeakerWaveIcon
+                  onClick={() => {
+                    audio && (audio.volume = 0);
+                  }}
+                  className="h-6 w-6 text-slate-500 hover:cursor-pointer"
+                />
+              ))}
+            <input
+              value={audio ? audio.volume * 100 : 0}
+              onChange={(e) => {
+                audio && (audio.volume = parseFloat(e.target.value) / 100);
+              }}
+              id="current-playing-volume"
+              type="range"
+              className="bg-slate-500 text-green-500"
+              style={{
+                width: "100px",
+                height: "5px",
+                borderRadius: "5px",
+                appearance: "none",
+                accentColor: "orangered",
+              }}
+            />
           </div>
         </div>
       )}
