@@ -38,6 +38,15 @@ const HomeView = () => {
     }, 4000);
   };
 
+  const calculateProgress = () => {
+    if (audio) {
+      const duration = audio.duration;
+      const progress = (currentTime / duration) * 100;
+      return progress;
+    }
+    return 0;
+  };
+
   const fetchData = () => {
     setIsFetching(true);
 
@@ -60,17 +69,20 @@ const HomeView = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen p-2">
+    <div className="flex flex-col h-screen">
       {notification && (
         <p
           id="notification"
-          className="text-sm bg-blue-900 text-white p-2 -mt-2 -mx-2 animate__animated animate__slideInDown animate__fast animate__repeat-1 animate__delay-1s"
+          className={
+            "absolute w-full text-center font-poppins items-center" +
+            "text-sm bg-blue-900 text-white animate__animated animate__slideInDown animate__fast animate__repeat-1 animate__delay-0.5s"
+          }
         >
           {notification}
         </p>
       )}
 
-      <h1 className="text-xl font-bold font-poppins">Home</h1>
+      <h1 className="text-xl font-bold font-poppins p-2">Home</h1>
 
       {musicContext.musicPath && (
         <MusicList
@@ -84,14 +96,24 @@ const HomeView = () => {
         <div
           id="current-play"
           className={
-            "flex flex-row items-center justify-between p-2 -mx-2 h-16 border-t-2 " +
-            "border-orange-600 animate__animated animate__slideInUp animate__faster animate__repeat-1 animate__delay-0.5s"
+            "flex flex-row absolute bottom-0 left-0 w-full backdrop-blur-md items-center justify-between h-16 p-2 " +
+            "animate__animated animate__slideInUp animate__faster animate__repeat-1 animate__delay-0.5s"
           }
         >
+          <div
+            id="progress-bar"
+            className="absolute bg-slate-300 top-0 h-0.5 w-full -mx-2"
+          >
+            <div
+              className="bg-orange-600 h-0.5"
+              style={{ width: `${calculateProgress()}%` }}
+            ></div>
+          </div>
+
           <div className="flex flex-row items-center gap-2 p-2">
             <MusicalNoteIcon className="h-6 w-6 text-slate-400 bg-blue-900 p-1 rounded-full hover:text-slate-200" />
             <div className="flex flex-col">
-              <p className="text-sm font-poppins">
+              <p className="text-sm font-poppins font-bold">
                 {musicContext.currentPlay.title}
               </p>
               <p className="text-xs">{formatHMS(currentTime)}</p>
