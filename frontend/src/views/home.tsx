@@ -1,10 +1,12 @@
 import {
+  ArrowsPointingOutIcon,
   MusicalNoteIcon,
   PauseIcon,
   PlayIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
   StopIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import "animate.css";
 import { useContext, useEffect, useState } from "react";
@@ -19,6 +21,7 @@ const HomeView = () => {
   const [notification, setNotification] = useState<string | null>("");
   const audio = document.getElementById("audio-data") as HTMLAudioElement;
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [currentMaximized, setCurrentMaximized] = useState<boolean>(false);
 
   useEffect(() => {
     if (musicList.length === 0) {
@@ -84,96 +87,215 @@ const HomeView = () => {
         </p>
       )}
 
-      <h1 className="text-xl font-bold font-inter p-2">Home</h1>
-
-      {musicContext.musicPath && (
-        <MusicList
-          isFetching={isFetching}
-          musicList={musicList}
-          onFetchData={fetchData}
-        />
-      )}
-
-      {musicContext.currentPlay && (
+      {currentMaximized && musicContext.currentPlay && (
         <div
-          id="current-play"
-          className={
-            "flex flex-row absolute bottom-0 left-0 w-full backdrop-blur-md items-center justify-between h-16 p-2 " +
-            "animate__animated animate__slideInUp animate__faster animate__repeat-1 animate__delay-0.5s"
-          }
+          id="maximized-current-playing"
+          className={"absolute top-0 right-0 h-screen w-screen z-10"}
         >
           <div
-            id="progress-bar"
-            className="absolute bg-slate-300 top-0 h-0.5 w-full -mx-2"
+            className={
+              "animate__animated animate__slideInDown animate__faster animate__repeat-1 animate__delay-0.5s bg-space_darkblue " +
+              "w-screen h-screen " +
+              "flex flex-col gap-2 items-center justify-center text-center"
+            }
           >
-            <div
-              className="bg-m_normalblue h-0.5"
-              style={{ width: `${calculateProgress()}%` }}
-            ></div>
-          </div>
+            <XMarkIcon
+              onClick={() => {
+                setCurrentMaximized(false);
+              }}
+              className="absolute right-5 top-5 h-6 w-6 text-slate-400 hover:cursor-pointer"
+            />
 
-          <div className="flex flex-row items-center gap-2 p-2">
-            <MusicalNoteIcon className="h-6 w-6 text-slate-400 bg-blue-900 p-1 rounded-full hover:text-slate-200" />
-            <div className="flex flex-col">
+            <MusicalNoteIcon className="h-36 w-36 bg-space_blue p-1 rounded-xl text-white" />
+
+            <div id="infos" className="flex flex-col text-white">
               <p className="text-sm font-inter font-medium">
                 {musicContext.currentPlay.title}
               </p>
               <p className="text-xs">{musicContext.currentPlay.artist}</p>
               <p className="text-xs">{formatHMS(currentTime)}</p>
             </div>
+
+            <div className="flex flex-row">
+              {audio && audio.paused ? (
+                <button
+                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                  onClick={() => {
+                    const audio = document.getElementById(
+                      "audio-data"
+                    ) as HTMLAudioElement;
+                    audio && audio.play();
+                  }}
+                >
+                  <PlayIcon className="h-6 w-6 text-white hover:text-slate-200" />
+                </button>
+              ) : (
+                <button
+                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                  onClick={() => {
+                    const audio = document.getElementById(
+                      "audio-data"
+                    ) as HTMLAudioElement;
+                    audio && audio.pause();
+                  }}
+                >
+                  <PauseIcon className="h-6 w-6 text-white hover:text-slate-200" />
+                </button>
+              )}
+              <button
+                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-r-full"
+                id="stop-button"
+                onClick={() => {
+                  musicContext.setCurrentPlay(null);
+                  setCurrentMaximized(false);
+                }}
+              >
+                <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
+              </button>
+            </div>
+
+            <div
+              id="progress-bar"
+              className="bg-slate-300 top-0 h-1 w-1/5 -mx-2 rounded-full"
+            >
+              <div
+                className="bg-gradient-to-r from-space_darkblue to-space_blue h-1 rounded-full"
+                style={{ width: `${calculateProgress()}%` }}
+              ></div>
+            </div>
+
+            <div
+              id="current-volume"
+              className="flex flex-row gap-2 items-center justify-center"
+            >
+              {audio &&
+                (audio.volume === 0 ? (
+                  <SpeakerXMarkIcon
+                    onClick={() => {
+                      audio && (audio.volume = 1);
+                    }}
+                    className="h-5 w-5 text-white hover:cursor-pointer"
+                  />
+                ) : (
+                  <SpeakerWaveIcon
+                    onClick={() => {
+                      audio && (audio.volume = 0);
+                    }}
+                    className="h-5 w-5 text-white hover:cursor-pointer"
+                  />
+                ))}
+              <input
+                value={audio ? audio.volume * 100 : 0}
+                onChange={(e) => {
+                  audio && (audio.volume = parseFloat(e.target.value) / 100);
+                }}
+                id="current-playing-volume"
+                type="range"
+                className="bg-space_blue accent-space_slate"
+                style={{
+                  width: "100px",
+                  height: "5px",
+                  borderRadius: "5px",
+                  appearance: "none",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <h1 className="text-xl font-bold font-inter p-2 text-slate-900">Home</h1>
+      {musicContext.currentPlay && (
+        <div
+          id="current-play"
+          className={
+            "flex flex-row backdrop-blur-md items-center justify-between h-16 p-2 bg-space_orange rounded-xl m-2"
+          }
+        >
+          <div className="flex flex-row items-center gap-2 p-2">
+            <MusicalNoteIcon className="h-8 w-8 bg-space_blue p-1 rounded-lg text-white" />
+            <div className="flex flex-col text-white">
+              <p className="text-sm font-inter font-medium">
+                {musicContext.currentPlay.title}
+              </p>
+              <p className="text-xs">{musicContext.currentPlay.artist}</p>
+              <p className="text-xs">{formatHMS(currentTime)}</p>
+            </div>
+            <ArrowsPointingOutIcon
+              onClick={() => {
+                setCurrentMaximized(true);
+              }}
+              className="h-6 w-6 text-white hover:text-space_blue hover:cursor-pointer"
+            />
           </div>
 
-          <div id="buttons" className="flex flex-row gap-0">
-            {audio && audio.paused ? (
+          <div className="flex flex-col gap-2 w-1/3 justify-center items-center">
+            <div id="action-buttons" className="flex flex-row gap-0">
+              {audio && audio.paused ? (
+                <button
+                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                  onClick={() => {
+                    const audio = document.getElementById(
+                      "audio-data"
+                    ) as HTMLAudioElement;
+                    audio && audio.play();
+                  }}
+                >
+                  <PlayIcon className="h-6 w-6 text-white hover:text-slate-200" />
+                </button>
+              ) : (
+                <button
+                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                  onClick={() => {
+                    const audio = document.getElementById(
+                      "audio-data"
+                    ) as HTMLAudioElement;
+                    audio && audio.pause();
+                  }}
+                >
+                  <PauseIcon className="h-6 w-6 text-white hover:text-slate-200" />
+                </button>
+              )}
               <button
-                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-r-full"
+                id="stop-button"
                 onClick={() => {
-                  const audio = document.getElementById(
-                    "audio-data"
-                  ) as HTMLAudioElement;
-                  audio && audio.play();
+                  musicContext.setCurrentPlay(null);
                 }}
               >
-                <PlayIcon className="h-6 w-6 text-white hover:text-slate-200" />
+                <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
               </button>
-            ) : (
-              <button
-                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
-                onClick={() => {
-                  const audio = document.getElementById(
-                    "audio-data"
-                  ) as HTMLAudioElement;
-                  audio && audio.pause();
-                }}
-              >
-                <PauseIcon className="h-6 w-6 text-white hover:text-slate-200" />
-              </button>
-            )}
-            <button
-              className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-r-full"
-              id="stop-button"
-              onClick={() => {
-                musicContext.setCurrentPlay(null);
-              }}
+            </div>
+
+            <div
+              id="progress-bar"
+              className="bg-slate-300 top-0 h-0.5 w-full -mx-2"
             >
-              <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
-            </button>
+              <div
+                className="bg-gradient-to-r from-space_darkblue to-space_blue h-0.5"
+                style={{ width: `${calculateProgress()}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="flex flex-row gap-2 items-center justify-center p-2 bg-gray-300 rounded-full">
+
+          <div
+            id="current-volume"
+            className="flex flex-row gap-2 items-center justify-center"
+          >
             {audio &&
               (audio.volume === 0 ? (
                 <SpeakerXMarkIcon
                   onClick={() => {
                     audio && (audio.volume = 1);
                   }}
-                  className="h-6 w-6 text-slate-500 hover:cursor-pointer"
+                  className="h-6 w-6 text-white hover:cursor-pointer"
                 />
               ) : (
                 <SpeakerWaveIcon
                   onClick={() => {
                     audio && (audio.volume = 0);
                   }}
-                  className="h-6 w-6 text-slate-500 hover:cursor-pointer"
+                  className="h-6 w-6 text-white hover:cursor-pointer"
                 />
               ))}
             <input
@@ -183,7 +305,7 @@ const HomeView = () => {
               }}
               id="current-playing-volume"
               type="range"
-              className="bg-[#F5F0CD] text-green-500"
+              className="bg-[#F5F0CD] accent-space_darkblue"
               style={{
                 width: "100px",
                 height: "5px",
@@ -194,6 +316,14 @@ const HomeView = () => {
             />
           </div>
         </div>
+      )}
+
+      {musicContext.musicPath && (
+        <MusicList
+          isFetching={isFetching}
+          musicList={musicList}
+          onFetchData={fetchData}
+        />
       )}
     </div>
   );

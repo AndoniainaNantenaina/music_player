@@ -84,6 +84,8 @@ if __name__ == "__main__":
             "http://127.0.0.1:5000",
             width=1024,
             height=768,
+            min_size=(800, 600),
+            frameless=True,
         )
 
         webview.start(debug=False)

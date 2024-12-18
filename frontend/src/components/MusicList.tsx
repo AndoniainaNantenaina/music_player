@@ -20,6 +20,7 @@ const MusicList = (props: {
             album_cover={music["album_cover"]}
             duration={music["tag"]["duration"]}
             date={music["tag"]["date"]}
+            album={music["tag"]["album"]}
           />
         ))
       ) : (

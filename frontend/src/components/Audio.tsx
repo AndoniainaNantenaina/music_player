@@ -3,7 +3,6 @@ import { useContext } from "react";
 import MusicPathContext from "../contexts/MusicPath";
 import CurrentPlay from "../data/currentPlay";
 import { getAudioData } from "../libs/audio";
-import { formatHMS } from "../libs/time";
 
 const Audio = (props: {
   id: string;
@@ -13,6 +12,7 @@ const Audio = (props: {
   album_cover: string;
   duration: number;
   date: string;
+  album: string;
 }) => {
   const musicContext = useContext(MusicPathContext);
 
@@ -39,9 +39,9 @@ const Audio = (props: {
     <div
       id={"audio-player-" + props.id}
       className={
-        "font-inter font-light text-sm flex flex-row p-2 justify-between items-center hover:bg-m_lightblue h-10 sm:gap-10 gap-4" +
+        "group font-inter font-light text-sm flex flex-row p-2 justify-between items-center hover:bg-space_slate h-16 sm:gap-10 gap-4" +
         (musicContext.currentPlay?.id === props.id
-          ? " bg-m_normalblue text-white"
+          ? " bg-gradient-to-r from-space_darkblue to-spacetext-space_blue text-white"
           : "text-gray-500")
       }
     >
@@ -49,12 +49,10 @@ const Audio = (props: {
         className={
           "h-6 w-6" +
           (musicContext.currentPlay?.id === props.id
-            ? " text-white"
-            : " text-gray-500")
+            ? " text-white group-hover:text-white"
+            : " text-space_blue group-hover:text-space_darkblue")
         }
       />
-
-      <p>{formatHMS(props.duration * 100)}</p>
 
       <p className="text-xs w-24">{props.date}</p>
 
@@ -67,6 +65,9 @@ const Audio = (props: {
         >
           {props.title}
         </p>
+
+        <p className="text-xs w-auto">Album: {props.album}</p>
+
         <p
           className={
             "flex flex-row text-xs gap-1 items-center" +
