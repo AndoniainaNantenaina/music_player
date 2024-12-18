@@ -84,7 +84,7 @@ const HomeView = () => {
         </p>
       )}
 
-      <h1 className="text-xl font-bold font-poppins p-2">Home</h1>
+      <h1 className="text-xl font-bold font-inter p-2">Home</h1>
 
       {musicContext.musicPath && (
         <MusicList
@@ -107,7 +107,7 @@ const HomeView = () => {
             className="absolute bg-slate-300 top-0 h-0.5 w-full -mx-2"
           >
             <div
-              className="bg-orange-600 h-0.5"
+              className="bg-m_normalblue h-0.5"
               style={{ width: `${calculateProgress()}%` }}
             ></div>
           </div>
@@ -115,9 +115,10 @@ const HomeView = () => {
           <div className="flex flex-row items-center gap-2 p-2">
             <MusicalNoteIcon className="h-6 w-6 text-slate-400 bg-blue-900 p-1 rounded-full hover:text-slate-200" />
             <div className="flex flex-col">
-              <p className="text-sm font-poppins font-bold">
+              <p className="text-sm font-inter font-medium">
                 {musicContext.currentPlay.title}
               </p>
+              <p className="text-xs">{musicContext.currentPlay.artist}</p>
               <p className="text-xs">{formatHMS(currentTime)}</p>
             </div>
           </div>
@@ -182,13 +183,13 @@ const HomeView = () => {
               }}
               id="current-playing-volume"
               type="range"
-              className="bg-slate-500 text-green-500"
+              className="bg-[#F5F0CD] text-green-500"
               style={{
                 width: "100px",
                 height: "5px",
                 borderRadius: "5px",
                 appearance: "none",
-                accentColor: "orangered",
+                accentColor: "FADA7A",
               }}
             />
           </div>

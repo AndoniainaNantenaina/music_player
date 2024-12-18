@@ -14,9 +14,12 @@ const MusicList = (props: {
           <Audio
             key={music["id"]}
             artist={music["tag"]["artist"]}
-            title={music["name"]}
+            title={music["tag"]["title"]}
             id={music["id"]}
             path={music["path"]}
+            album_cover={music["album_cover"]}
+            duration={music["tag"]["duration"]}
+            date={music["tag"]["date"]}
           />
         ))
       ) : (

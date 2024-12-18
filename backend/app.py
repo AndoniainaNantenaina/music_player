@@ -1,3 +1,4 @@
+import base64
 import os
 import threading
 from argparse import ArgumentParser
@@ -5,7 +6,8 @@ from argparse import ArgumentParser
 import webview
 from flask import Flask, render_template, request
 from flask_cors import CORS
-from libs.functions import get_audio, get_tag, list_music_in_folder
+from libs.audio import get_album_cover, get_tag
+from libs.functions import get_audio, list_music_in_folder
 
 app = Flask(__name__)
 CORS(app, origins=["*"])
@@ -47,12 +49,18 @@ def files():
     res = []
 
     for index, file in enumerate(files):
+        album_cover_img = get_album_cover(file)
+        base64_album_cover_img = (
+            base64.b64encode(album_cover_img).decode("utf-8") if album_cover_img else ""
+        )
+
         res.append(
             {
                 "id": index,
                 "path": file,
                 "name": str(os.path.basename(file)).split(".")[0],
                 "tag": get_tag(file),
+                "album_cover": base64_album_cover_img,
             }
         )
 
