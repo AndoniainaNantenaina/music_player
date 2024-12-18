@@ -1,1 +1,1 @@
-pyinstaller app.py --onefile --noconsole --add-data static:static --add-data templates:templates --name "Music Player"
+pyinstaller app.py --onefile --noconsole --add-data static:static --add-data templates:templates --name "Music Player" --icon=icons8-musique-512.png
