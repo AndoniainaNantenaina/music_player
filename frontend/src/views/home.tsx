@@ -3,7 +3,9 @@ import {
   ChevronDownIcon,
   ForwardIcon,
   MusicalNoteIcon,
+  PauseCircleIcon,
   PauseIcon,
+  PlayCircleIcon,
   PlayIcon,
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
@@ -14,6 +16,7 @@ import "animate.css";
 import { useContext, useEffect, useState } from "react";
 import MusicList from "../components/MusicList";
 import MusicPathContext from "../contexts/MusicPath";
+import { truncate } from "../libs/string";
 import { formatHMS } from "../libs/time";
 
 const HomeView = () => {
@@ -218,9 +221,11 @@ const HomeView = () => {
             <MusicalNoteIcon className="h-8 w-8 bg-space_blue p-1 rounded-lg text-white" />
             <div className="flex flex-col text-white">
               <p className="text-sm font-inter font-medium">
-                {musicContext.currentPlay.title}
+                {truncate(musicContext.currentPlay.title, 50)}
               </p>
-              <p className="text-xs">{musicContext.currentPlay.artist}</p>
+              <p className="text-xs">
+                {truncate(musicContext.currentPlay.artist, 50)}
+              </p>
               <p className="text-xs">{formatHMS(currentTime)}</p>
             </div>
           </div>
@@ -233,39 +238,26 @@ const HomeView = () => {
               <BackwardIcon className="h-6 w-6 text-white mr-2" />
 
               {audio && audio.paused ? (
-                <button
-                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-full"
+                <PlayCircleIcon
                   onClick={() => {
                     const audio = document.getElementById(
                       "audio-data"
                     ) as HTMLAudioElement;
                     audio && audio.play();
                   }}
-                >
-                  <PlayIcon className="h-6 w-6 text-white hover:text-slate-200" />
-                </button>
+                  className="h-10 w-10 text-white hover:text-slate-200 hover:cursor-pointer"
+                />
               ) : (
-                <button
-                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-full"
+                <PauseCircleIcon
                   onClick={() => {
                     const audio = document.getElementById(
                       "audio-data"
                     ) as HTMLAudioElement;
                     audio && audio.pause();
                   }}
-                >
-                  <PauseIcon className="h-6 w-6 text-white hover:text-slate-200" />
-                </button>
+                  className="h-10 w-10 text-white hover:text-slate-200 hover:cursor-pointer"
+                />
               )}
-              {/* <button
-                className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-r-full"
-                id="stop-button"
-                onClick={() => {
-                  musicContext.setCurrentPlay(null);
-                }}
-              >
-                <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
-              </button> */}
 
               <ForwardIcon className="h-6 w-6 text-white ml-2" />
             </div>
@@ -295,14 +287,14 @@ const HomeView = () => {
                   onClick={() => {
                     audio && (audio.volume = 1);
                   }}
-                  className="h-6 w-6 text-white hover:cursor-pointer"
+                  className="h-4 w-4 text-white hover:cursor-pointer"
                 />
               ) : (
                 <SpeakerWaveIcon
                   onClick={() => {
                     audio && (audio.volume = 0);
                   }}
-                  className="h-6 w-6 text-white hover:cursor-pointer"
+                  className="h-4 w-4 text-white hover:cursor-pointer"
                 />
               ))}
             <input
