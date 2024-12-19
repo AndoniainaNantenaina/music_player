@@ -1,5 +1,7 @@
 import {
-  ArrowsPointingOutIcon,
+  BackwardIcon,
+  ChevronDownIcon,
+  ForwardIcon,
   MusicalNoteIcon,
   PauseIcon,
   PlayIcon,
@@ -209,7 +211,7 @@ const HomeView = () => {
         <div
           id="current-play"
           className={
-            "flex flex-row backdrop-blur-md items-center justify-between h-16 p-2 bg-space_orange rounded-xl m-2"
+            "flex flex-row backdrop-blur-md items-center justify-between h-16 p-2 bg-gradient-to-br from-space_orange to-orange-500 rounded-xl m-2"
           }
         >
           <div className="flex flex-row items-center gap-2 p-2">
@@ -221,19 +223,18 @@ const HomeView = () => {
               <p className="text-xs">{musicContext.currentPlay.artist}</p>
               <p className="text-xs">{formatHMS(currentTime)}</p>
             </div>
-            <ArrowsPointingOutIcon
-              onClick={() => {
-                setCurrentMaximized(true);
-              }}
-              className="h-6 w-6 text-white hover:text-space_blue hover:cursor-pointer"
-            />
           </div>
 
           <div className="flex flex-col gap-2 w-1/3 justify-center items-center">
-            <div id="action-buttons" className="flex flex-row gap-0">
+            <div
+              id="action-buttons"
+              className="flex flex-row gap-0 items-center"
+            >
+              <BackwardIcon className="h-6 w-6 text-white mr-2" />
+
               {audio && audio.paused ? (
                 <button
-                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-full"
                   onClick={() => {
                     const audio = document.getElementById(
                       "audio-data"
@@ -245,7 +246,7 @@ const HomeView = () => {
                 </button>
               ) : (
                 <button
-                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-l-full"
+                  className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-full"
                   onClick={() => {
                     const audio = document.getElementById(
                       "audio-data"
@@ -256,7 +257,7 @@ const HomeView = () => {
                   <PauseIcon className="h-6 w-6 text-white hover:text-slate-200" />
                 </button>
               )}
-              <button
+              {/* <button
                 className="flex flex-col items-center p-2 w-20 bg-orange-400 hover:bg-orange-600 text-white rounded-r-full"
                 id="stop-button"
                 onClick={() => {
@@ -264,16 +265,22 @@ const HomeView = () => {
                 }}
               >
                 <StopIcon className="h-6 w-6 text-white hover:text-slate-200" />
-              </button>
+              </button> */}
+
+              <ForwardIcon className="h-6 w-6 text-white ml-2" />
             </div>
 
             <div
               id="progress-bar"
-              className="bg-slate-300 top-0 h-0.5 w-full -mx-2"
+              className="bg-slate-300 top-0 h-0.5 w-full -mx-2 flex flex-row items-center"
             >
               <div
-                className="bg-gradient-to-r from-space_darkblue to-space_blue h-0.5"
+                className="container bg-gradient-to-r from-space_darkblue to-space_blue h-0.5"
                 style={{ width: `${calculateProgress()}%` }}
+              ></div>
+              <div
+                className="bg-white h-3 w-3 rounded-full"
+                id="right-dot"
               ></div>
             </div>
           </div>
@@ -308,11 +315,17 @@ const HomeView = () => {
               className="bg-[#F5F0CD] accent-space_darkblue"
               style={{
                 width: "100px",
-                height: "5px",
+                height: "3px",
                 borderRadius: "5px",
                 appearance: "none",
                 accentColor: "FADA7A",
               }}
+            />
+            <ChevronDownIcon
+              onClick={() => {
+                setCurrentMaximized(true);
+              }}
+              className="h-6 w-6 text-white hover:text-space_blue hover:cursor-pointer"
             />
           </div>
         </div>

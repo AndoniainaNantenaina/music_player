@@ -51,7 +51,9 @@ def files():
     for index, file in enumerate(files):
         album_cover_img = get_album_cover(file)
         base64_album_cover_img = (
-            base64.b64encode(album_cover_img).decode("utf-8") if album_cover_img else ""
+            base64.b64encode(album_cover_img).decode("utf-8")
+            if album_cover_img
+            else ""
         )
 
         res.append(
@@ -85,7 +87,6 @@ if __name__ == "__main__":
             width=1024,
             height=768,
             min_size=(800, 600),
-            frameless=True,
         )
 
         webview.start(debug=False)

@@ -45,6 +45,7 @@ const Audio = (props: {
           : "text-gray-500")
       }
     >
+      <p className="font-inter text-xs">{props.id + 1}</p>
       <MusicalNoteIcon
         className={
           "h-6 w-6" +
