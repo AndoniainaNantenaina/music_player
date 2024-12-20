@@ -3,20 +3,20 @@ import CurrentPlay from "../data/currentPlay";
 
 export interface MusicPathContextType {
   musicPath: string | null;
-  setMusicPath: (path: string) => void;
   localMusicList: any[];
-  setLocalMusicList: (localMusicList: any[]) => void;
   currentPlay: CurrentPlay | null;
+  setMusicPath: (path: string) => void;
   setCurrentPlay: (audio_url: CurrentPlay | null) => void;
+  setCurrentIndex: (index: number | null) => void;
 }
 
 const MusicPathContext = createContext<MusicPathContextType>({
   musicPath: null,
-  setMusicPath: () => {},
   localMusicList: [],
-  setLocalMusicList: () => {},
   currentPlay: null,
+  setMusicPath: () => {},
   setCurrentPlay: () => {},
+  setCurrentIndex: () => {},
 });
 
 export default MusicPathContext;

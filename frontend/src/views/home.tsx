@@ -30,7 +30,6 @@ const HomeView = () => {
 
   useEffect(() => {
     if (musicList.length === 0) {
-      fetchData();
     }
 
     if (audio) {
@@ -55,27 +54,6 @@ const HomeView = () => {
       return progress;
     }
     return 0;
-  };
-
-  const fetchData = () => {
-    setIsFetching(true);
-
-    if (musicContext.musicPath) {
-      fetch("http://localhost:5000/files?folder=" + musicContext.musicPath)
-        .then((res) => res.json())
-        .then(async (response) => {
-          console.log(response);
-
-          setMusicList(response["data"]);
-          setIsFetching(false);
-          showNotification("Data fetched successfully");
-        })
-        .catch((error) => {
-          console.error("Error fetching data: ", error);
-          setIsFetching(false);
-          showNotification("Error fetching data: " + error.message);
-        });
-    }
   };
 
   return (
@@ -217,11 +195,11 @@ const HomeView = () => {
             "flex flex-row backdrop-blur-md items-center justify-between h-16 p-2 bg-gradient-to-br from-space_orange to-orange-500 rounded-xl m-2"
           }
         >
-          <div className="flex flex-row items-center gap-2 p-2">
+          <div className="flex flex-row items-center gap-2 p-2 w-1/3">
             <MusicalNoteIcon className="h-8 w-8 bg-space_blue p-1 rounded-lg text-white" />
             <div className="flex flex-col text-white">
               <p className="text-sm font-inter font-medium">
-                {truncate(musicContext.currentPlay.title, 50)}
+                {truncate(musicContext.currentPlay.title, 35)}
               </p>
               <p className="text-xs">
                 {truncate(musicContext.currentPlay.artist, 50)}
@@ -230,12 +208,25 @@ const HomeView = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 w-1/3 justify-center items-center">
+          <div
+            id="control-buttons"
+            className="flex flex-col gap-2 w-1/3 justify-center items-center"
+          >
             <div
               id="action-buttons"
               className="flex flex-row gap-0 items-center"
             >
-              <BackwardIcon className="h-6 w-6 text-white mr-2" />
+              <BackwardIcon
+                onClick={() => {
+                  const currentPlay = musicContext.currentPlay;
+                  if (currentPlay) {
+                    if (currentPlay.id !== 0) {
+                      musicContext.setCurrentIndex(currentPlay.id - 1);
+                    }
+                  }
+                }}
+                className="h-6 w-6 text-white mr-2 hover:cursor-pointer hover:text-slate-200"
+              />
 
               {audio && audio.paused ? (
                 <PlayCircleIcon
@@ -259,7 +250,17 @@ const HomeView = () => {
                 />
               )}
 
-              <ForwardIcon className="h-6 w-6 text-white ml-2" />
+              <ForwardIcon
+                onClick={() => {
+                  const currentPlay = musicContext.currentPlay;
+                  if (currentPlay) {
+                    if (currentPlay.id !== 0) {
+                      musicContext.setCurrentIndex(currentPlay.id + 1);
+                    }
+                  }
+                }}
+                className="h-6 w-6 text-white ml-2 hover:cursor-pointer hover:text-slate-200"
+              />
             </div>
 
             <div
@@ -279,7 +280,7 @@ const HomeView = () => {
 
           <div
             id="current-volume"
-            className="flex flex-row gap-2 items-center justify-center"
+            className="flex flex-row gap-2 w-1/3 items-center justify-center"
           >
             {audio &&
               (audio.volume === 0 ? (
@@ -326,8 +327,8 @@ const HomeView = () => {
       {musicContext.musicPath && (
         <MusicList
           isFetching={isFetching}
-          musicList={musicList}
-          onFetchData={fetchData}
+          musicList={musicContext.localMusicList}
+          onFetchData={() => {}}
         />
       )}
     </div>

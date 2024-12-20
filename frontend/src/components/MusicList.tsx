@@ -1,8 +1,9 @@
 import { ArrowPathIcon, MusicalNoteIcon } from "@heroicons/react/24/solid";
+import { Music } from "../data/music";
 import Audio from "./Audio";
 
 const MusicList = (props: {
-  musicList: never[];
+  musicList: Music[];
   onFetchData: () => void;
   isFetching: boolean;
 }) => {

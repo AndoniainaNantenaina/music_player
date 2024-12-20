@@ -1,8 +1,6 @@
 from typing import Any
 
 from mutagen.easyid3 import EasyID3
-from mutagen.id3 import ID3
-from mutagen.mp3 import MP3
 
 
 def get_tag(file_path: str):
@@ -10,11 +8,11 @@ def get_tag(file_path: str):
         audio = EasyID3(file_path)
 
         return {
-            "title": audio["title"],
-            "artist": audio["artist"],
-            "album": audio["album"],
-            "date": audio["date"],
-            "duration": audio["length"],
+            "title": audio["title"][0],
+            "artist": audio["artist"][0],
+            "album": audio["album"][0],
+            "date": audio["date"][0],
+            "duration": int(audio["length"][0]),
         }
 
     except Exception as e:

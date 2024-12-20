@@ -5,7 +5,7 @@ import MusicPathContext from "../contexts/MusicPath";
 import { WelcomeData } from "../data/welcome";
 
 const SetPathView = () => {
-  const pathContext = useContext(MusicPathContext);
+  const musicContext = useContext(MusicPathContext);
   const [path, setPath] = useState<string>("");
 
   const randomWelcome = Math.floor(Math.random() * WelcomeData.length);
@@ -35,8 +35,8 @@ const SetPathView = () => {
           }
           disabled={!path}
           onClick={() => {
-            pathContext.setMusicPath(path);
-            sessionStorage.setItem("musicPath", path);
+            // Save the path to the context
+            musicContext.setMusicPath(path);
           }}
         >
           SEARCH

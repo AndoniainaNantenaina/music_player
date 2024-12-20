@@ -1,5 +1,5 @@
 interface CurrentPlay {
-  id: string;
+  id: number;
   artist: string;
   title: string;
   path: string;

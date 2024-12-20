@@ -1,8 +1,8 @@
 function truncate(input: string, n: number) {
-  if (input[0].length <= n) {
-    return input[0];
+  if (input.length <= n) {
+    return input;
   } else {
-    return input[0].slice(0, n - 1) + "...";
+    return input.slice(0, n - 1) + "...";
   }
 }
 
