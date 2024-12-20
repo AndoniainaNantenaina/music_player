@@ -70,7 +70,7 @@ def files():
 
 
 def start_server():
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="127.0.0.1", port=7139, debug=False)
 
 
 if __name__ == "__main__":
@@ -83,7 +83,7 @@ if __name__ == "__main__":
 
         window = webview.create_window(
             "Music Player",
-            "http://127.0.0.1:5000",
+            "http://127.0.0.1:7139",
             width=1024,
             height=768,
             min_size=(800, 600),
